@@ -1,7 +1,4 @@
-import App from './App'
-import HelloWorld from './HelloWorld'
+import App from "./App";
+import HelloWorld from "./HelloWorld";
 
-export {
-  App,
-  HelloWorld
-}
+export { App, HelloWorld };

@@ -1,0 +1,32 @@
+button {
+  padding: 10px 15px;
+  border: none;
+  box-shadow: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: inherit;
+  margin-right: var(--half-spacing);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &.--primary {
+    background-color: var(--color-accent-primary);
+    color: #fff;
+  }
+
+  &.--secondary {
+    background-color: var(--color-neutral);
+  }
+
+  &.--danger {
+    background-color: var(--color-danger);
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

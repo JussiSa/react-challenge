@@ -1,25 +1,25 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from "react";
+import ReactDOM from "react-dom";
 
-import { App } from './components'
+import { App } from "./components";
 
-import 'material-icons'
-import 'typeface-roboto'
+import "material-icons";
+import "typeface-roboto";
 
-import './index.less'
+import "./index.less";
 
-const mount = document.getElementById('mount')
+const mount = document.getElementById("mount");
 const render = () => {
   if (!mount) {
-    console.error('No mountpoint found!')
-    return
+    console.error("No mountpoint found!");
+    return;
   }
 
-  ReactDOM.render(<App />, mount)
-}
+  ReactDOM.render(<App />, mount);
+};
 
-render()
+render();
 
 if (module.hot) {
-  module.hot.accept('./components', render)
+  module.hot.accept("./components", render);
 }

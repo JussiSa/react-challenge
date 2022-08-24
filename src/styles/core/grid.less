@@ -1,0 +1,12 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, auto);
+  gap: var(--default-spacing);
+
+  // Create span classes from span-1 to span-12
+  each(range(1, 12, 1), {
+    .col-@{index} {
+      grid-column: span @value;
+    }
+  });
+}

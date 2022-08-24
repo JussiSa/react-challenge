@@ -1,21 +1,21 @@
-import { Action } from './actions'
+import { Action } from "./actions";
 
 export interface ApplicationState {
-  text: string
+  text: string;
 }
 
 const getDefaultState = () => ({
-  text: ''
-})
+  text: "",
+});
 
-export default function reducer (
+export default function reducer(
   state: ApplicationState = getDefaultState(),
   action: Action
 ): ApplicationState {
   switch (action.type) {
-    case 'text-set':
-      return { ...state, text: action.text }
+    case "text-set":
+      return { ...state, text: action.text };
     default:
-      return state
+      return state;
   }
 }
