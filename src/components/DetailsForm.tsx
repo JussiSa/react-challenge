@@ -1,44 +1,83 @@
-import React, { SyntheticEvent } from "react";
+import React, { FormEvent, MouseEvent, SyntheticEvent, useState } from "react";
 import { Detail } from "../models/detail";
+import { StorageUtil } from "../utils/storage-util";
 
-class DetailsForm extends React.Component {
-  public formEl!: HTMLFormElement | null;
+const DetailsFormAndTable = () => {
+  let detailsForm: HTMLFormElement | null;
+  const [detail, setDetail] = useState<Detail>(new Detail());
+  const [details, setDetails] = useState<Detail[]>(() => {
+    const stored = StorageUtil.getItem("details");
+    return stored ? JSON.parse(stored) : [];
+  });
 
-  constructor(props: Readonly<{}>) {
-    super(props);
+  /**
+   * Handle form submit
+   * @param e
+   */
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-    this.state = {
-      name: "",
-      description: "",
-      comment: "",
-    } as Detail;
+    setDetails((prevState) => {
+      return [...prevState, detail];
+    });
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    storeDetails();
+    resetForm();
   }
 
-  public handleSubmit(): void {
-    console.log(this.state);
-  }
-
-  public handleChange(e: SyntheticEvent): void {
+  /**
+   * Handle input change
+   * @param e
+   */
+  function handleChange(e: SyntheticEvent) {
     const target = e.target as HTMLInputElement;
     const value = target.value;
     const name = target.name;
 
-    this.setState({ [name]: value });
+    setDetail((prevState) => {
+      return { ...prevState, [name]: value } as any;
+    });
   }
 
-  public onKeyDown(e: KeyboardEvent): void {
-    if (e.key === "Enter") {
+  /**
+   * Reset form
+   * @param e
+   */
+  function resetForm(e?: MouseEvent<HTMLButtonElement> | undefined) {
+    if (e) {
       e.preventDefault();
-      this.formEl?.submit();
+    }
+
+    if (detailsForm) {
+      detailsForm.reset();
+    }
+
+    setDetail(new Detail());
+  }
+
+  /**
+   * Store submitted details to storage
+   */
+  function storeDetails() {
+    if (details && details.length > 0) {
+      StorageUtil.setItem("details", JSON.stringify(details));
     }
   }
 
-  render(): React.ReactNode {
-    return (
-      <form onSubmit={this.handleSubmit} ref={(el) => (this.formEl = el)}>
+  /**
+   * Delete clicked detail
+   * @param index index of detail to be deleted
+   */
+  function deleteDetail(index: number) {
+    setDetails((prevState) => {
+      const arr = prevState.splice(index, 1);
+      return arr;
+    });
+  }
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} ref={(el) => (detailsForm = el)}>
         <div className="grid">
           <div className="col-6">
             <div className="form-control">
@@ -47,7 +86,7 @@ class DetailsForm extends React.Component {
                 type="text"
                 name="name"
                 id="name"
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -58,7 +97,7 @@ class DetailsForm extends React.Component {
                 type="text"
                 name="description"
                 id="description"
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -69,19 +108,53 @@ class DetailsForm extends React.Component {
                 name="comment"
                 rows={4}
                 id="comment"
-                onChange={this.handleChange}
-                onKeyDown={this.onKeyDown}
+                onChange={handleChange}
               ></textarea>
             </div>
           </div>
         </div>
-        <button className="--secondary">Clear</button>
-        <button className="--primary" type="submit">
+        <button className="--secondary" onClick={resetForm}>
+          Clear
+        </button>
+        <button
+          className="--primary"
+          type="submit"
+          disabled={detail.name === "" || detail.description === ""}
+        >
           Add
         </button>
       </form>
-    );
-  }
-}
+      <hr></hr>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {details.map((detail, index) => {
+            return (
+              <tr key={index}>
+                <td>{detail.name}</td>
+                <td>{detail.description}</td>
+                <th className="--align-right">
+                  <button className="--secondary">Details</button>
+                  <button
+                    className="--danger"
+                    onClick={() => deleteDetail(index)}
+                  >
+                    Delete
+                  </button>
+                </th>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
+  );
+};
 
-export default DetailsForm;
+export default DetailsFormAndTable;

@@ -5,7 +5,7 @@ import { createStore } from "redux";
 import { Container } from "@material-ui/core";
 
 import reducer from "../reducer";
-import DetailsForm from "./DetailsForm";
+import DetailsFormAndTable from "./DetailsForm";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const store = createStore(
@@ -26,7 +26,7 @@ if (module.hot) {
 const App = () => (
   <Provider store={store}>
     <Container>
-      <DetailsForm></DetailsForm>
+      <DetailsFormAndTable></DetailsFormAndTable>
     </Container>
   </Provider>
 );
